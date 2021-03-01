@@ -1,7 +1,59 @@
-import React from "react";
+import React, { Component } from "react";
+import { Link, withRouter } from "react-router-dom";
 
-const MoviesPage = () => {
-  return <h1>Movies page</h1>;
-};
+class MoviesPage extends Component {
+  state = {
+    moviesName: "",
+    moviesParam: [],
+  };
 
-export default MoviesPage;
+  handleChange = (event) => {
+    const { value } = event.currentTarget;
+    this.setState({ moviesName: value.toLowerCase() });
+  };
+
+  loadMovie = () => {
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=0516dd3e6a153d51192e61dfe30410f4&language=en-US&page=1&include_adult=true&query=${this.state.moviesName}`
+    )
+      .then((res) => res.json())
+      .then((movies) => this.setState({ moviesParam: movies.results }));
+  };
+
+  render() {
+    console.log(this.props.match.url);
+    const { location } = this.props;
+    return (
+      <>
+        <h1>Movies page</h1>
+        <input
+          type="text"
+          placeholder="Search movies"
+          value={this.state.moviesName}
+          onChange={this.handleChange}
+        />
+        <button type="submit" onClick={this.loadMovie}>
+          <span>Search</span>
+        </button>
+        <ul>
+          {this.state.moviesParam.map((movie) => (
+            <li key={movie.id}>
+              <Link
+                to={{
+                  pathname: `${this.props.match.url}/${movie.id}`,
+                  state: {
+                    from: location,
+                  },
+                }}
+              >
+                {movie.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </>
+    );
+  }
+}
+
+export default withRouter(MoviesPage);

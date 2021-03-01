@@ -1,0 +1,26 @@
+.Section {
+  display: flex;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(46, 44, 44, 0.5);
+}
+
+.SectionDetails {
+  margin-left: 10px;
+}
+
+.Genres {
+  list-style: none;
+  display: flex;
+  margin-right: 10px;
+}
+
+li {
+  margin-left: 0px;
+  margin-right: 10px;
+}
+
+.About {
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(46, 44, 44, 0.5);
+}
