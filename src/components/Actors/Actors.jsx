@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-
+import s from "./Actors.module.css";
 class Actors extends Component {
   state = {
     cast: [],
@@ -20,7 +20,7 @@ class Actors extends Component {
       <div>
         <ul>
           {this.state.cast.map((actor) => (
-            <li key={actor.id}>
+            <li key={actor.id} className={s.ListActors}>
               <img
                 src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
                 alt={`${actor.name}`}

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import s from "./Reviews.module.css";
 
 class Reviews extends Component {
   state = {
@@ -27,9 +28,9 @@ class Reviews extends Component {
         {results.length > 1 && (
           <ul>
             {this.state.results.map((result) => (
-              <li key={result.id}>
-                Author:{result.author}
-                <p>{result.content}</p>
+              <li key={result.id} className={s.Author}>
+                Author: {result.author}
+                <p className={s.Content}>{result.content}</p>
               </li>
             ))}
           </ul>
