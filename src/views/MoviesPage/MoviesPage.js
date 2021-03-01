@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
+import s from "./MoviesPage.module.css";
 
 class MoviesPage extends Component {
   state = {
@@ -26,15 +27,22 @@ class MoviesPage extends Component {
     return (
       <>
         <h1>Movies page</h1>
-        <input
-          type="text"
-          placeholder="Search movies"
-          value={this.state.moviesName}
-          onChange={this.handleChange}
-        />
-        <button type="submit" onClick={this.loadMovie}>
-          <span>Search</span>
-        </button>
+        <div className={s.SearchForm}>
+          <input
+            className={s.SearchForm_input}
+            type="text"
+            placeholder="Search movies"
+            value={this.state.moviesName}
+            onChange={this.handleChange}
+          />
+          <button
+            type="submit"
+            onClick={this.loadMovie}
+            className={s.SearchForm_button}
+          >
+            <span className={s.SearchForm_button_label}>Search</span>
+          </button>
+        </div>
         <ul>
           {this.state.moviesParam.map((movie) => (
             <li key={movie.id}>
