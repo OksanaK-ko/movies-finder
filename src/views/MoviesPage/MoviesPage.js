@@ -1,24 +1,58 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import s from "./MoviesPage.module.css";
-
+import getQueryParams from "../../utils/get-query-params";
+import Searchbox from "../../components/Searchbox/Searchbox";
+import axios from "axios";
+// import {fetch} from "../../services/fetchApi";
+// import s from "./MoviesPage.module.css";
 class MoviesPage extends Component {
   state = {
     moviesName: "",
     moviesParam: [],
+    error: null,
   };
 
-  handleChange = (event) => {
-    const { value } = event.currentTarget;
-    this.setState({ moviesName: value.toLowerCase() });
-  };
+  componentDidMount() {
+    const { query } = getQueryParams(this.props.location.search);
+    if (query) {
+      axios
+        .get(
+          `https://api.themoviedb.org/3/search/movie?api_key=0516dd3e6a153d51192e61dfe30410f4&
+           language=en-US&page=1&include_adult=true&query=${query}`
+        )
+        .then((response) =>
+          this.setState({ moviesParam: response.data.results })
+        )
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
 
-  loadMovie = () => {
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=0516dd3e6a153d51192e61dfe30410f4&language=en-US&page=1&include_adult=true&query=${this.state.moviesName}`
-    )
-      .then((res) => res.json())
-      .then((movies) => this.setState({ moviesParam: movies.results }));
+  componentDidUpdate(prevProps, prevState) {
+    const { query: prevQuery } = getQueryParams(prevProps.location.search);
+    const { query: nextQuery } = getQueryParams(this.props.location.search);
+    if (prevQuery !== nextQuery) {
+      axios
+        .get(
+          `https://api.themoviedb.org/3/search/movie?api_key=0516dd3e6a153d51192e61dfe30410f4&
+           language=en-US&page=1&include_adult=true&query=${nextQuery}`
+        )
+        .then((response) =>
+          this.setState({ moviesParam: response.data.results })
+        )
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
+
+  handleChangeQuery = (query) => {
+    this.props.history.push({
+      // pathname: this.props.location.pathname,
+      ...this.props.location,
+      search: `query=${query}`,
+    });
   };
 
   render() {
@@ -27,22 +61,7 @@ class MoviesPage extends Component {
     return (
       <>
         <h1>Movies page</h1>
-        <div className={s.SearchForm}>
-          <input
-            className={s.SearchForm_input}
-            type="text"
-            placeholder="Search movies"
-            value={this.state.moviesName}
-            onChange={this.handleChange}
-          />
-          <button
-            type="submit"
-            onClick={this.loadMovie}
-            className={s.SearchForm_button}
-          >
-            <span className={s.SearchForm_button_label}>Search</span>
-          </button>
-        </div>
+        <Searchbox onSubmit={this.handleChangeQuery} />
         <ul>
           {this.state.moviesParam.map((movie) => (
             <li key={movie.id}>

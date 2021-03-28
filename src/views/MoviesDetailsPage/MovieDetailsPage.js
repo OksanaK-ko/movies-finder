@@ -1,9 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, Suspense, lazy } from "react";
 import axios from "axios";
 import { Route, Link } from "react-router-dom";
-import Actors from "../../components/Actors/Actors";
-import Reviews from "../../components/Reviews/Reviews";
+// import Actors from "../../components/Actors/Actors";
+// import Reviews from "../../components/Reviews/Reviews";
 import s from "./MovieDetailsPage.module.css";
+
+const Actors = lazy(() => import("../../components/Actors/Actors.jsx"));
+const Reviews = lazy(() => import("../../components/Reviews/Reviews.jsx"));
+
 class MoviesDetailsPage extends Component {
   state = {
     id: null,
@@ -79,8 +83,10 @@ class MoviesDetailsPage extends Component {
               <Link to={`${match.url}/reviews`}>Reviews</Link>
             </li>
           </ul>
-          <Route path={`${match.path}/cast`} component={Actors} />
-          <Route path={`${match.path}/reviews`} component={Reviews} />
+          <Suspense fallback={<h1>Загружаем...</h1>}>
+            <Route path={`${match.path}/cast`} component={Actors} />
+            <Route path={`${match.path}/reviews`} component={Reviews} />
+          </Suspense>
         </div>
       </>
     );
